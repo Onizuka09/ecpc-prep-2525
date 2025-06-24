@@ -1,0 +1,32 @@
+
+
+// Configure debug launch settings
+// Feel free to copy these and modify them for your debugger and MCU
+{
+    "version": "0.2.0",
+    "projectName": "cubeMX",
+    "configurations": [
+            {
+            "name": "STlink attach",
+            "cwd": "${workspaceRoot}",
+            "executable": "${workspaceRoot}/build/testWork.elf",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "stlink",
+            "device": "STM32F407VG",
+            "interface": "swd",
+            "liveWatch": {
+                "enabled": true,
+                "samplesPerSecond": 4
+            },
+            "svdFile": "STM32F407VG.svd", // Include svd to watch device peripherals
+            "runToEntryPoint": "main",
+            "postRestartCommands": [
+                "monitor reset halt",
+                "load"
+            ],
+            "preLaunchTask": "Build", // configured in tasks.json
+            "swoConfig": {} // currently (v1.7.0) not supported
+        }
+    ]
+}

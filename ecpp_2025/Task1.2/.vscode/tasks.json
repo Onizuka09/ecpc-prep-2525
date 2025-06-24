@@ -1,0 +1,40 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build",
+      "type": "shell",
+      "command": "make",
+      "group": "build",
+      "problemMatcher": [
+        "$gcc"
+      ]
+    },
+    {
+      "label": "Flash",
+      "type": "shell",
+      "command": "st-flash write build/*.bin 0x8000000",
+      "dependsOn": "Build",
+      "group": "build"
+    },
+    {
+      "label": "Clang-Tidy",
+      "type": "shell",
+      "command": "clang-tidy-15",
+      "args": [
+        "${file}",
+        "--",
+        "-mcpu=cortex-m4",
+        "-mthumb",
+        "-std=c11",
+        "-DSTM32F407xx",
+        "-DUSE_HAL_DRIVER",
+        "-I./Core/Inc",
+        "-I./Drivers/CMSIS/Include",
+        "-I./Drivers/CMSIS/Device/ST/STM32F4xx/Include",
+        "-I./Drivers/STM32F4xx_HAL_Driver/Inc"
+      ],
+      "problemMatcher": []
+    }
+  ]
+}

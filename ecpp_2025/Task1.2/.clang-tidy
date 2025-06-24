@@ -1,0 +1,18 @@
+Checks: >
+  clang-analyzer-*,
+  bugprone-*,
+  cert-*,
+  cppcoreguidelines-*,
+  misc-*,
+  readability-*,
+  performance-*,
+  portability-*,
+  modernize-*,
+  hicpp-*,
+  -modernize-use-trailing-return-type
+  -performance-no-int-to-ptr          
+
+
+WarningsAsErrors: '*'
+HeaderFilterRegex: '^(?!.*Drivers/).*'
+FormatStyle: file

@@ -1,0 +1,8 @@
+{
+"[c]": {
+  "editor.formatOnSave": true
+},
+"clang-format.executable": "/usr/bin/clang-format-15",
+"editor.formatOnPaste": true
+
+}
