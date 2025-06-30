@@ -1,0 +1,2 @@
+// Timer1 APB1 bus
+#define TIM2_BASE_ADDR 0x40000000

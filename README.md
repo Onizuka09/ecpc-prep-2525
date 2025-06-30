@@ -6,6 +6,13 @@ this repor will contain project and exmples will to prepare for the ecpc
 this repo will devised into: 
 - notes: some usefull notes will use help me understand and document my journey 
 - templates exmple (will contain templates project on how to use basic peripheral of the STM32F4)
+
+# ecpc and ecpp challengegs 
+
+- ecpc 2024 
+- ecpp 2025 
+- ecpc 2025  
+
 ## Roadmap 
 # Milestone 1 
 - complete the ecpp tasks

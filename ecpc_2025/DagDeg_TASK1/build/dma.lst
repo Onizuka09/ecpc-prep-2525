@@ -1,0 +1,134 @@
+ARM GAS  /tmp/ccZYUej6.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"dma.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.MX_DMA_Init,"ax",%progbits
+  20              		.align	1
+  21              		.global	MX_DMA_Init
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	MX_DMA_Init:
+  27              	.LFB239:
+  28              		.file 1 "Core/Src/dma.c"
+   1:Core/Src/dma.c **** /* USER CODE BEGIN Header */
+   2:Core/Src/dma.c **** /**
+   3:Core/Src/dma.c ****   ******************************************************************************
+   4:Core/Src/dma.c ****   * @file    dma.c
+   5:Core/Src/dma.c ****   * @brief   This file provides code for the configuration
+   6:Core/Src/dma.c ****   *          of all the requested memory to memory DMA transfers.
+   7:Core/Src/dma.c ****   ******************************************************************************
+   8:Core/Src/dma.c ****   * @attention
+   9:Core/Src/dma.c ****   *
+  10:Core/Src/dma.c ****   * Copyright (c) 2025 STMicroelectronics.
+  11:Core/Src/dma.c ****   * All rights reserved.
+  12:Core/Src/dma.c ****   *
+  13:Core/Src/dma.c ****   * This software is licensed under terms that can be found in the LICENSE file
+  14:Core/Src/dma.c ****   * in the root directory of this software component.
+  15:Core/Src/dma.c ****   * If no LICENSE file comes with this software, it is provided AS-IS.
+  16:Core/Src/dma.c ****   *
+  17:Core/Src/dma.c ****   ******************************************************************************
+  18:Core/Src/dma.c ****   */
+  19:Core/Src/dma.c **** /* USER CODE END Header */
+  20:Core/Src/dma.c **** 
+  21:Core/Src/dma.c **** /* Includes ------------------------------------------------------------------*/
+  22:Core/Src/dma.c **** #include "dma.h"
+  23:Core/Src/dma.c **** 
+  24:Core/Src/dma.c **** /* USER CODE BEGIN 0 */
+  25:Core/Src/dma.c **** 
+  26:Core/Src/dma.c **** /* USER CODE END 0 */
+  27:Core/Src/dma.c **** 
+  28:Core/Src/dma.c **** /*----------------------------------------------------------------------------*/
+  29:Core/Src/dma.c **** /* Configure DMA                                                              */
+  30:Core/Src/dma.c **** /*----------------------------------------------------------------------------*/
+ARM GAS  /tmp/ccZYUej6.s 			page 2
+
+
+  31:Core/Src/dma.c **** 
+  32:Core/Src/dma.c **** /* USER CODE BEGIN 1 */
+  33:Core/Src/dma.c **** 
+  34:Core/Src/dma.c **** /* USER CODE END 1 */
+  35:Core/Src/dma.c **** 
+  36:Core/Src/dma.c **** /**
+  37:Core/Src/dma.c ****   * Enable DMA controller clock
+  38:Core/Src/dma.c ****   */
+  39:Core/Src/dma.c **** void MX_DMA_Init(void)
+  40:Core/Src/dma.c **** {
+  29              		.loc 1 40 1 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 8
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		@ link register save eliminated.
+  34 0000 82B0     		sub	sp, sp, #8
+  35              	.LCFI0:
+  36              		.cfi_def_cfa_offset 8
+  41:Core/Src/dma.c **** 
+  42:Core/Src/dma.c ****   /* DMA controller clock enable */
+  43:Core/Src/dma.c ****   __HAL_RCC_DMA2_CLK_ENABLE();
+  37              		.loc 1 43 3 view .LVU1
+  38              	.LBB2:
+  39              		.loc 1 43 3 view .LVU2
+  40 0002 0023     		movs	r3, #0
+  41 0004 0193     		str	r3, [sp, #4]
+  42              		.loc 1 43 3 view .LVU3
+  43 0006 064B     		ldr	r3, .L3
+  44 0008 1A6B     		ldr	r2, [r3, #48]
+  45 000a 42F48002 		orr	r2, r2, #4194304
+  46 000e 1A63     		str	r2, [r3, #48]
+  47              		.loc 1 43 3 view .LVU4
+  48 0010 1B6B     		ldr	r3, [r3, #48]
+  49 0012 03F48003 		and	r3, r3, #4194304
+  50 0016 0193     		str	r3, [sp, #4]
+  51              		.loc 1 43 3 view .LVU5
+  52 0018 019B     		ldr	r3, [sp, #4]
+  53              	.LBE2:
+  54              		.loc 1 43 3 view .LVU6
+  44:Core/Src/dma.c **** 
+  45:Core/Src/dma.c **** }
+  55              		.loc 1 45 1 is_stmt 0 view .LVU7
+  56 001a 02B0     		add	sp, sp, #8
+  57              	.LCFI1:
+  58              		.cfi_def_cfa_offset 0
+  59              		@ sp needed
+  60 001c 7047     		bx	lr
+  61              	.L4:
+  62 001e 00BF     		.align	2
+  63              	.L3:
+  64 0020 00380240 		.word	1073887232
+  65              		.cfi_endproc
+  66              	.LFE239:
+  68              		.text
+  69              	.Letext0:
+  70              		.file 2 "/opt/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/machine/_default_types.h"
+  71              		.file 3 "/opt/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/sys/_stdint.h"
+ARM GAS  /tmp/ccZYUej6.s 			page 3
+
+
+  72              		.file 4 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h"
+ARM GAS  /tmp/ccZYUej6.s 			page 4
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 dma.c
+     /tmp/ccZYUej6.s:20     .text.MX_DMA_Init:0000000000000000 $t
+     /tmp/ccZYUej6.s:26     .text.MX_DMA_Init:0000000000000000 MX_DMA_Init
+     /tmp/ccZYUej6.s:64     .text.MX_DMA_Init:0000000000000020 $d
+
+NO UNDEFINED SYMBOLS
