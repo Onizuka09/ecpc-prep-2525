@@ -1,0 +1,11 @@
+{
+  "[c]": {
+    "editor.formatOnSave": true
+  },
+  "clang-format.executable": "/usr/bin/clang-format-15",
+  "editor.formatOnPaste": true,
+  "cortex-debug.gdbPath": "/opt/gcc-arm-none-eabi-10.3-2021.10/bin//arm-none-eabi-gdb",
+  // "cortex-debug.JLinkGDBServerPath": "/usr/local/bin/JLinkGDBServer",
+  "cortex-debug.stutilPath": "/usr/bin/st-util",
+  "cortex-debug.variableUseNaturalFormat": true,
+}

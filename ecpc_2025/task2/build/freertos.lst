@@ -1,0 +1,794 @@
+ARM GAS  /tmp/cckDjasy.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"freertos.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.StartDefaultTask,"ax",%progbits
+  20              		.align	1
+  21              		.global	StartDefaultTask
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	StartDefaultTask:
+  27              	.LFB139:
+  28              		.file 1 "Core/Src/freertos.c"
+   1:Core/Src/freertos.c **** /* USER CODE BEGIN Header */
+   2:Core/Src/freertos.c **** /**
+   3:Core/Src/freertos.c ****  ******************************************************************************
+   4:Core/Src/freertos.c ****  * File Name          : freertos.c
+   5:Core/Src/freertos.c ****  * Description        : Code for freertos applications
+   6:Core/Src/freertos.c ****  ******************************************************************************
+   7:Core/Src/freertos.c ****  * @attention
+   8:Core/Src/freertos.c ****  *
+   9:Core/Src/freertos.c ****  * Copyright (c) 2025 STMicroelectronics.
+  10:Core/Src/freertos.c ****  * All rights reserved.
+  11:Core/Src/freertos.c ****  *
+  12:Core/Src/freertos.c ****  * This software is licensed under terms that can be found in the LICENSE file
+  13:Core/Src/freertos.c ****  * in the root directory of this software component.
+  14:Core/Src/freertos.c ****  * If no LICENSE file comes with this software, it is provided AS-IS.
+  15:Core/Src/freertos.c ****  *
+  16:Core/Src/freertos.c ****  ******************************************************************************
+  17:Core/Src/freertos.c ****  */
+  18:Core/Src/freertos.c **** /* USER CODE END Header */
+  19:Core/Src/freertos.c **** 
+  20:Core/Src/freertos.c **** /* Includes ------------------------------------------------------------------*/
+  21:Core/Src/freertos.c **** #include "FreeRTOS.h"
+  22:Core/Src/freertos.c **** #include "cmsis_os.h"
+  23:Core/Src/freertos.c **** #include "main.h"
+  24:Core/Src/freertos.c **** #include "task.h"
+  25:Core/Src/freertos.c **** 
+  26:Core/Src/freertos.c **** /* Private includes ----------------------------------------------------------*/
+  27:Core/Src/freertos.c **** /* USER CODE BEGIN Includes */
+  28:Core/Src/freertos.c **** 
+  29:Core/Src/freertos.c **** /* USER CODE END Includes */
+  30:Core/Src/freertos.c **** 
+ARM GAS  /tmp/cckDjasy.s 			page 2
+
+
+  31:Core/Src/freertos.c **** /* Private typedef -----------------------------------------------------------*/
+  32:Core/Src/freertos.c **** /* USER CODE BEGIN PTD */
+  33:Core/Src/freertos.c **** 
+  34:Core/Src/freertos.c **** /* USER CODE END PTD */
+  35:Core/Src/freertos.c **** 
+  36:Core/Src/freertos.c **** /* Private define ------------------------------------------------------------*/
+  37:Core/Src/freertos.c **** /* USER CODE BEGIN PD */
+  38:Core/Src/freertos.c **** 
+  39:Core/Src/freertos.c **** /* USER CODE END PD */
+  40:Core/Src/freertos.c **** 
+  41:Core/Src/freertos.c **** /* Private macro -------------------------------------------------------------*/
+  42:Core/Src/freertos.c **** /* USER CODE BEGIN PM */
+  43:Core/Src/freertos.c **** 
+  44:Core/Src/freertos.c **** /* USER CODE END PM */
+  45:Core/Src/freertos.c **** 
+  46:Core/Src/freertos.c **** /* Private variables ---------------------------------------------------------*/
+  47:Core/Src/freertos.c **** /* USER CODE BEGIN Variables */
+  48:Core/Src/freertos.c **** 
+  49:Core/Src/freertos.c **** /* USER CODE END Variables */
+  50:Core/Src/freertos.c **** /* Definitions for defaultTask */
+  51:Core/Src/freertos.c **** osThreadId_t defaultTaskHandle;
+  52:Core/Src/freertos.c **** const osThreadAttr_t defaultTask_attributes = {
+  53:Core/Src/freertos.c ****     .name = "defaultTask",
+  54:Core/Src/freertos.c ****     .stack_size = 128 * 4,
+  55:Core/Src/freertos.c ****     .priority = (osPriority_t)osPriorityNormal,
+  56:Core/Src/freertos.c **** };
+  57:Core/Src/freertos.c **** /* Definitions for ClignoteTask */
+  58:Core/Src/freertos.c **** osThreadId_t ClignoteTaskHandle;
+  59:Core/Src/freertos.c **** const osThreadAttr_t ClignoteTask_attributes = {
+  60:Core/Src/freertos.c ****     .name = "ClignoteTask",
+  61:Core/Src/freertos.c ****     .stack_size = 128 * 4,
+  62:Core/Src/freertos.c ****     .priority = (osPriority_t)osPriorityLow1,
+  63:Core/Src/freertos.c **** };
+  64:Core/Src/freertos.c **** /* Definitions for ButtonTask */
+  65:Core/Src/freertos.c **** osThreadId_t ButtonTaskHandle;
+  66:Core/Src/freertos.c **** const osThreadAttr_t ButtonTask_attributes = {
+  67:Core/Src/freertos.c ****     .name = "ButtonTask",
+  68:Core/Src/freertos.c ****     .stack_size = 128 * 4,
+  69:Core/Src/freertos.c ****     .priority = (osPriority_t)osPriorityLow4,
+  70:Core/Src/freertos.c **** };
+  71:Core/Src/freertos.c **** 
+  72:Core/Src/freertos.c **** /* Private function prototypes -----------------------------------------------*/
+  73:Core/Src/freertos.c **** /* USER CODE BEGIN FunctionPrototypes */
+  74:Core/Src/freertos.c **** 
+  75:Core/Src/freertos.c **** /* USER CODE END FunctionPrototypes */
+  76:Core/Src/freertos.c **** 
+  77:Core/Src/freertos.c **** void StartDefaultTask(void* argument);
+  78:Core/Src/freertos.c **** void ClignoteTask_Cbk(void* argument);
+  79:Core/Src/freertos.c **** void ButtonTask_Cbk(void* argument);
+  80:Core/Src/freertos.c **** 
+  81:Core/Src/freertos.c **** void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
+  82:Core/Src/freertos.c **** 
+  83:Core/Src/freertos.c **** /**
+  84:Core/Src/freertos.c ****  * @brief  FreeRTOS initialization
+  85:Core/Src/freertos.c ****  * @param  None
+  86:Core/Src/freertos.c ****  * @retval None
+  87:Core/Src/freertos.c ****  */
+ARM GAS  /tmp/cckDjasy.s 			page 3
+
+
+  88:Core/Src/freertos.c **** void MX_FREERTOS_Init(void)
+  89:Core/Src/freertos.c **** {
+  90:Core/Src/freertos.c ****     /* USER CODE BEGIN Init */
+  91:Core/Src/freertos.c **** 
+  92:Core/Src/freertos.c ****     /* USER CODE END Init */
+  93:Core/Src/freertos.c **** 
+  94:Core/Src/freertos.c ****     /* USER CODE BEGIN RTOS_MUTEX */
+  95:Core/Src/freertos.c ****     /* add mutexes, ... */
+  96:Core/Src/freertos.c ****     /* USER CODE END RTOS_MUTEX */
+  97:Core/Src/freertos.c **** 
+  98:Core/Src/freertos.c ****     /* USER CODE BEGIN RTOS_SEMAPHORES */
+  99:Core/Src/freertos.c ****     /* add semaphores, ... */
+ 100:Core/Src/freertos.c ****     /* USER CODE END RTOS_SEMAPHORES */
+ 101:Core/Src/freertos.c **** 
+ 102:Core/Src/freertos.c ****     /* USER CODE BEGIN RTOS_TIMERS */
+ 103:Core/Src/freertos.c ****     /* start timers, add new ones, ... */
+ 104:Core/Src/freertos.c ****     /* USER CODE END RTOS_TIMERS */
+ 105:Core/Src/freertos.c **** 
+ 106:Core/Src/freertos.c ****     /* USER CODE BEGIN RTOS_QUEUES */
+ 107:Core/Src/freertos.c ****     /* add queues, ... */
+ 108:Core/Src/freertos.c ****     /* USER CODE END RTOS_QUEUES */
+ 109:Core/Src/freertos.c **** 
+ 110:Core/Src/freertos.c ****     /* Create the thread(s) */
+ 111:Core/Src/freertos.c ****     /* creation of defaultTask */
+ 112:Core/Src/freertos.c ****     defaultTaskHandle =
+ 113:Core/Src/freertos.c ****         osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
+ 114:Core/Src/freertos.c **** 
+ 115:Core/Src/freertos.c ****     /* creation of ClignoteTask */
+ 116:Core/Src/freertos.c ****     ClignoteTaskHandle =
+ 117:Core/Src/freertos.c ****         osThreadNew(ClignoteTask_Cbk, NULL, &ClignoteTask_attributes);
+ 118:Core/Src/freertos.c **** 
+ 119:Core/Src/freertos.c ****     /* creation of ButtonTask */
+ 120:Core/Src/freertos.c ****     ButtonTaskHandle =
+ 121:Core/Src/freertos.c ****         osThreadNew(ButtonTask_Cbk, NULL, &ButtonTask_attributes);
+ 122:Core/Src/freertos.c **** 
+ 123:Core/Src/freertos.c ****     /* USER CODE BEGIN RTOS_THREADS */
+ 124:Core/Src/freertos.c ****     /* add threads, ... */
+ 125:Core/Src/freertos.c ****     /* USER CODE END RTOS_THREADS */
+ 126:Core/Src/freertos.c **** 
+ 127:Core/Src/freertos.c ****     /* USER CODE BEGIN RTOS_EVENTS */
+ 128:Core/Src/freertos.c ****     /* add events, ... */
+ 129:Core/Src/freertos.c ****     /* USER CODE END RTOS_EVENTS */
+ 130:Core/Src/freertos.c **** }
+ 131:Core/Src/freertos.c **** 
+ 132:Core/Src/freertos.c **** /* USER CODE BEGIN Header_StartDefaultTask */
+ 133:Core/Src/freertos.c **** /**
+ 134:Core/Src/freertos.c ****  * @brief  Function implementing the defaultTask thread.
+ 135:Core/Src/freertos.c ****  * @param  argument: Not used
+ 136:Core/Src/freertos.c ****  * @retval None
+ 137:Core/Src/freertos.c ****  */
+ 138:Core/Src/freertos.c **** /* USER CODE END Header_StartDefaultTask */
+ 139:Core/Src/freertos.c **** void StartDefaultTask(void* argument)
+ 140:Core/Src/freertos.c **** {
+  29              		.loc 1 140 1 view -0
+  30              		.cfi_startproc
+  31              		@ Volatile: function does not return.
+  32              		@ args = 0, pretend = 0, frame = 0
+ARM GAS  /tmp/cckDjasy.s 			page 4
+
+
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              	.LVL0:
+  35              		.loc 1 140 1 is_stmt 0 view .LVU1
+  36 0000 08B5     		push	{r3, lr}
+  37              	.LCFI0:
+  38              		.cfi_def_cfa_offset 8
+  39              		.cfi_offset 3, -8
+  40              		.cfi_offset 14, -4
+  41              	.LVL1:
+  42              	.L2:
+ 141:Core/Src/freertos.c ****     /* USER CODE BEGIN StartDefaultTask */
+ 142:Core/Src/freertos.c ****     /* Infinite loop */
+ 143:Core/Src/freertos.c ****     for (;;)
+  43              		.loc 1 143 5 is_stmt 1 discriminator 1 view .LVU2
+ 144:Core/Src/freertos.c ****     {
+ 145:Core/Src/freertos.c ****         osDelay(1);
+  44              		.loc 1 145 9 discriminator 1 view .LVU3
+  45 0002 0120     		movs	r0, #1
+  46 0004 FFF7FEFF 		bl	osDelay
+  47              	.LVL2:
+ 143:Core/Src/freertos.c ****     {
+  48              		.loc 1 143 11 discriminator 1 view .LVU4
+  49 0008 FBE7     		b	.L2
+  50              		.cfi_endproc
+  51              	.LFE139:
+  53              		.section	.text.ClignoteTask_Cbk,"ax",%progbits
+  54              		.align	1
+  55              		.global	ClignoteTask_Cbk
+  56              		.syntax unified
+  57              		.thumb
+  58              		.thumb_func
+  60              	ClignoteTask_Cbk:
+  61              	.LFB140:
+ 146:Core/Src/freertos.c ****     }
+ 147:Core/Src/freertos.c ****     /* USER CODE END StartDefaultTask */
+ 148:Core/Src/freertos.c **** }
+ 149:Core/Src/freertos.c **** 
+ 150:Core/Src/freertos.c **** /* USER CODE BEGIN Header_ClignoteTask_Cbk */
+ 151:Core/Src/freertos.c **** /**
+ 152:Core/Src/freertos.c ****  * @brief Function implementing the ClignoteTask thread.
+ 153:Core/Src/freertos.c ****  * @param argument: Not used
+ 154:Core/Src/freertos.c ****  * @retval None
+ 155:Core/Src/freertos.c ****  */
+ 156:Core/Src/freertos.c **** volatile uint8_t LedTaskState = 0 ; 
+ 157:Core/Src/freertos.c **** static TickType_t xLastWakeTime = 0;  // Make it static or global (NOT local)
+ 158:Core/Src/freertos.c **** volatile int i = 0 ; 
+ 159:Core/Src/freertos.c **** volatile sum = 0 ; 
+ 160:Core/Src/freertos.c **** volatile  TickType_t xStartTime = 0 ; 
+ 161:Core/Src/freertos.c **** /* USER CODE END Header_ClignoteTask_Cbk */
+ 162:Core/Src/freertos.c **** void ClignoteTask_Cbk(void* argument)
+ 163:Core/Src/freertos.c **** {
+  62              		.loc 1 163 1 view -0
+  63              		.cfi_startproc
+  64              		@ args = 0, pretend = 0, frame = 0
+  65              		@ frame_needed = 0, uses_anonymous_args = 0
+  66              	.LVL3:
+  67              		.loc 1 163 1 is_stmt 0 view .LVU6
+ARM GAS  /tmp/cckDjasy.s 			page 5
+
+
+  68 0000 10B5     		push	{r4, lr}
+  69              	.LCFI1:
+  70              		.cfi_def_cfa_offset 8
+  71              		.cfi_offset 4, -8
+  72              		.cfi_offset 14, -4
+  73 0002 1DE0     		b	.L9
+  74              	.LVL4:
+  75              	.L11:
+  76              	.LBB2:
+ 164:Core/Src/freertos.c ****     /* USER CODE BEGIN ClignoteTask_Cbk */
+ 165:Core/Src/freertos.c ****     /* Infinite loop */
+ 166:Core/Src/freertos.c **** 
+ 167:Core/Src/freertos.c **** 
+ 168:Core/Src/freertos.c ****     for (;;)
+ 169:Core/Src/freertos.c ****     {
+ 170:Core/Src/freertos.c **** 
+ 171:Core/Src/freertos.c ****       
+ 172:Core/Src/freertos.c ****         if (LedTaskState == 1 ){ 
+ 173:Core/Src/freertos.c ****             GPIO_PinState tmp = HAL_GPIO_ReadPin(GPIOD,GPIO_PIN_15); 
+  77              		.loc 1 173 13 is_stmt 1 view .LVU7
+  78              		.loc 1 173 33 is_stmt 0 view .LVU8
+  79 0004 164C     		ldr	r4, .L12
+  80 0006 4FF40041 		mov	r1, #32768
+  81 000a 2046     		mov	r0, r4
+  82 000c FFF7FEFF 		bl	HAL_GPIO_ReadPin
+  83              	.LVL5:
+  84 0010 0246     		mov	r2, r0
+  85              	.LVL6:
+ 174:Core/Src/freertos.c ****             HAL_GPIO_WritePin(GPIOD,GPIO_PIN_15,tmp); 
+  86              		.loc 1 174 13 is_stmt 1 view .LVU9
+  87 0012 4FF40041 		mov	r1, #32768
+  88 0016 2046     		mov	r0, r4
+  89 0018 FFF7FEFF 		bl	HAL_GPIO_WritePin
+  90              	.LVL7:
+ 175:Core/Src/freertos.c ****             LedTaskState = 0 ; 
+  91              		.loc 1 175 13 view .LVU10
+  92              		.loc 1 175 26 is_stmt 0 view .LVU11
+  93 001c 114B     		ldr	r3, .L12+4
+  94 001e 0022     		movs	r2, #0
+  95 0020 1A70     		strb	r2, [r3]
+  96              	.L6:
+  97              		.loc 1 175 26 view .LVU12
+  98              	.LBE2:
+ 176:Core/Src/freertos.c ****         }else { 
+ 177:Core/Src/freertos.c ****             HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);
+ 178:Core/Src/freertos.c **** 
+ 179:Core/Src/freertos.c ****         }
+ 180:Core/Src/freertos.c **** 
+ 181:Core/Src/freertos.c ****          xStartTime = xTaskGetTickCount();
+  99              		.loc 1 181 10 is_stmt 1 view .LVU13
+ 100              		.loc 1 181 23 is_stmt 0 view .LVU14
+ 101 0022 FFF7FEFF 		bl	xTaskGetTickCount
+ 102              	.LVL8:
+ 103              		.loc 1 181 21 view .LVU15
+ 104 0026 104B     		ldr	r3, .L12+8
+ 105 0028 1860     		str	r0, [r3]
+ 182:Core/Src/freertos.c ****         while (xTaskGetTickCount() - xStartTime <= (1000))
+ARM GAS  /tmp/cckDjasy.s 			page 6
+
+
+ 106              		.loc 1 182 9 is_stmt 1 view .LVU16
+ 107              	.L7:
+ 108              		.loc 1 182 15 view .LVU17
+ 109              		.loc 1 182 16 is_stmt 0 view .LVU18
+ 110 002a FFF7FEFF 		bl	xTaskGetTickCount
+ 111              	.LVL9:
+ 112              		.loc 1 182 36 view .LVU19
+ 113 002e 0E4B     		ldr	r3, .L12+8
+ 114 0030 1B68     		ldr	r3, [r3]
+ 115 0032 C01A     		subs	r0, r0, r3
+ 116              		.loc 1 182 15 view .LVU20
+ 117 0034 B0F57A7F 		cmp	r0, #1000
+ 118 0038 0DD9     		bls	.L8
+ 183:Core/Src/freertos.c ****         {
+ 184:Core/Src/freertos.c ****         xLastWakeTime = xTaskGetTickCount();
+ 185:Core/Src/freertos.c ****         }
+ 186:Core/Src/freertos.c **** 
+ 187:Core/Src/freertos.c ****         xStartTime = 0 ; 
+ 119              		.loc 1 187 9 is_stmt 1 view .LVU21
+ 120              		.loc 1 187 20 is_stmt 0 view .LVU22
+ 121 003a 0B4B     		ldr	r3, .L12+8
+ 122 003c 0022     		movs	r2, #0
+ 123 003e 1A60     		str	r2, [r3]
+ 168:Core/Src/freertos.c ****     {
+ 124              		.loc 1 168 11 is_stmt 1 view .LVU23
+ 125              	.L9:
+ 168:Core/Src/freertos.c ****     {
+ 126              		.loc 1 168 5 view .LVU24
+ 172:Core/Src/freertos.c ****             GPIO_PinState tmp = HAL_GPIO_ReadPin(GPIOD,GPIO_PIN_15); 
+ 127              		.loc 1 172 9 view .LVU25
+ 172:Core/Src/freertos.c ****             GPIO_PinState tmp = HAL_GPIO_ReadPin(GPIOD,GPIO_PIN_15); 
+ 128              		.loc 1 172 26 is_stmt 0 view .LVU26
+ 129 0040 084B     		ldr	r3, .L12+4
+ 130 0042 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 131 0044 DBB2     		uxtb	r3, r3
+ 172:Core/Src/freertos.c ****             GPIO_PinState tmp = HAL_GPIO_ReadPin(GPIOD,GPIO_PIN_15); 
+ 132              		.loc 1 172 12 view .LVU27
+ 133 0046 012B     		cmp	r3, #1
+ 134 0048 DCD0     		beq	.L11
+ 177:Core/Src/freertos.c **** 
+ 135              		.loc 1 177 13 is_stmt 1 view .LVU28
+ 136 004a 4FF40041 		mov	r1, #32768
+ 137 004e 0448     		ldr	r0, .L12
+ 138 0050 FFF7FEFF 		bl	HAL_GPIO_TogglePin
+ 139              	.LVL10:
+ 140 0054 E5E7     		b	.L6
+ 141              	.L8:
+ 184:Core/Src/freertos.c ****         }
+ 142              		.loc 1 184 9 view .LVU29
+ 184:Core/Src/freertos.c ****         }
+ 143              		.loc 1 184 25 is_stmt 0 view .LVU30
+ 144 0056 FFF7FEFF 		bl	xTaskGetTickCount
+ 145              	.LVL11:
+ 184:Core/Src/freertos.c ****         }
+ 146              		.loc 1 184 23 view .LVU31
+ 147 005a 044B     		ldr	r3, .L12+12
+ 148 005c 1860     		str	r0, [r3]
+ARM GAS  /tmp/cckDjasy.s 			page 7
+
+
+ 149 005e E4E7     		b	.L7
+ 150              	.L13:
+ 151              		.align	2
+ 152              	.L12:
+ 153 0060 000C0240 		.word	1073875968
+ 154 0064 00000000 		.word	.LANCHOR0
+ 155 0068 00000000 		.word	.LANCHOR1
+ 156 006c 00000000 		.word	.LANCHOR2
+ 157              		.cfi_endproc
+ 158              	.LFE140:
+ 160              		.section	.text.ButtonTask_Cbk,"ax",%progbits
+ 161              		.align	1
+ 162              		.global	ButtonTask_Cbk
+ 163              		.syntax unified
+ 164              		.thumb
+ 165              		.thumb_func
+ 167              	ButtonTask_Cbk:
+ 168              	.LFB141:
+ 188:Core/Src/freertos.c ****     }
+ 189:Core/Src/freertos.c ****     /* USER CODE END ClignoteTask_Cbk */
+ 190:Core/Src/freertos.c **** }
+ 191:Core/Src/freertos.c **** 
+ 192:Core/Src/freertos.c **** /* USER CODE BEGIN Header_ButtonTask_Cbk */
+ 193:Core/Src/freertos.c **** 
+ 194:Core/Src/freertos.c **** uint8_t BtnState = 0;
+ 195:Core/Src/freertos.c **** /**
+ 196:Core/Src/freertos.c ****  * @brief Function implementing the ButtonTask thread.
+ 197:Core/Src/freertos.c ****  * @param argument: Not used
+ 198:Core/Src/freertos.c ****  * @retval None
+ 199:Core/Src/freertos.c ****  */
+ 200:Core/Src/freertos.c **** /* USER CODE END Header_ButtonTask_Cbk */
+ 201:Core/Src/freertos.c **** void ButtonTask_Cbk(void* argument)
+ 202:Core/Src/freertos.c **** {
+ 169              		.loc 1 202 1 is_stmt 1 view -0
+ 170              		.cfi_startproc
+ 171              		@ Volatile: function does not return.
+ 172              		@ args = 0, pretend = 0, frame = 0
+ 173              		@ frame_needed = 0, uses_anonymous_args = 0
+ 174              	.LVL12:
+ 175              		.loc 1 202 1 is_stmt 0 view .LVU33
+ 176 0000 08B5     		push	{r3, lr}
+ 177              	.LCFI2:
+ 178              		.cfi_def_cfa_offset 8
+ 179              		.cfi_offset 3, -8
+ 180              		.cfi_offset 14, -4
+ 181 0002 0CE0     		b	.L17
+ 182              	.LVL13:
+ 183              	.L15:
+ 203:Core/Src/freertos.c ****     /* USER CODE BEGIN ButtonTask_Cbk */
+ 204:Core/Src/freertos.c ****     /* Infinite loop */
+ 205:Core/Src/freertos.c **** 
+ 206:Core/Src/freertos.c ****     for (;;)
+ 207:Core/Src/freertos.c ****     {
+ 208:Core/Src/freertos.c ****         BtnState = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0);
+ 209:Core/Src/freertos.c ****         if (BtnState == 1)
+ 210:Core/Src/freertos.c ****         {
+ 211:Core/Src/freertos.c ****             osDelay(20);
+ARM GAS  /tmp/cckDjasy.s 			page 8
+
+
+ 212:Core/Src/freertos.c ****             BtnState = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0);
+ 213:Core/Src/freertos.c ****             if (BtnState == 1)
+ 214:Core/Src/freertos.c ****             {
+ 215:Core/Src/freertos.c ****                 osThreadSuspend(ClignoteTaskHandle);
+ 216:Core/Src/freertos.c ****                 HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_RESET);
+ 217:Core/Src/freertos.c ****                 LedTaskState = 1 ; 
+ 218:Core/Src/freertos.c ****             }
+ 219:Core/Src/freertos.c ****             else
+ 220:Core/Src/freertos.c ****             {
+ 221:Core/Src/freertos.c ****                 // HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_SET);
+ 222:Core/Src/freertos.c ****                 // osThreadResume(ClignoteTaskHandle);
+ 223:Core/Src/freertos.c ****                 // do nohing
+ 224:Core/Src/freertos.c ****             }
+ 225:Core/Src/freertos.c ****         }
+ 226:Core/Src/freertos.c ****         else
+ 227:Core/Src/freertos.c ****         {
+ 228:Core/Src/freertos.c ****             HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_SET);
+ 184              		.loc 1 228 13 is_stmt 1 view .LVU34
+ 185 0004 0122     		movs	r2, #1
+ 186 0006 4FF40051 		mov	r1, #8192
+ 187 000a 1548     		ldr	r0, .L19
+ 188 000c FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 189              	.LVL14:
+ 229:Core/Src/freertos.c ****             osThreadResume(ClignoteTaskHandle);
+ 190              		.loc 1 229 13 view .LVU35
+ 191 0010 144B     		ldr	r3, .L19+4
+ 192 0012 1868     		ldr	r0, [r3]
+ 193 0014 FFF7FEFF 		bl	osThreadResume
+ 194              	.LVL15:
+ 195              	.L16:
+ 230:Core/Src/freertos.c ****         }
+ 231:Core/Src/freertos.c **** 
+ 232:Core/Src/freertos.c ****         osDelay(80);
+ 196              		.loc 1 232 9 view .LVU36
+ 197 0018 5020     		movs	r0, #80
+ 198 001a FFF7FEFF 		bl	osDelay
+ 199              	.LVL16:
+ 206:Core/Src/freertos.c ****     {
+ 200              		.loc 1 206 11 view .LVU37
+ 201              	.L17:
+ 206:Core/Src/freertos.c ****     {
+ 202              		.loc 1 206 5 view .LVU38
+ 208:Core/Src/freertos.c ****         if (BtnState == 1)
+ 203              		.loc 1 208 9 view .LVU39
+ 208:Core/Src/freertos.c ****         if (BtnState == 1)
+ 204              		.loc 1 208 20 is_stmt 0 view .LVU40
+ 205 001e 0121     		movs	r1, #1
+ 206 0020 1148     		ldr	r0, .L19+8
+ 207 0022 FFF7FEFF 		bl	HAL_GPIO_ReadPin
+ 208              	.LVL17:
+ 208:Core/Src/freertos.c ****         if (BtnState == 1)
+ 209              		.loc 1 208 18 view .LVU41
+ 210 0026 114B     		ldr	r3, .L19+12
+ 211 0028 1870     		strb	r0, [r3]
+ 209:Core/Src/freertos.c ****         {
+ 212              		.loc 1 209 9 is_stmt 1 view .LVU42
+ 209:Core/Src/freertos.c ****         {
+ARM GAS  /tmp/cckDjasy.s 			page 9
+
+
+ 213              		.loc 1 209 12 is_stmt 0 view .LVU43
+ 214 002a 0128     		cmp	r0, #1
+ 215 002c EAD1     		bne	.L15
+ 211:Core/Src/freertos.c ****             BtnState = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0);
+ 216              		.loc 1 211 13 is_stmt 1 view .LVU44
+ 217 002e 1420     		movs	r0, #20
+ 218 0030 FFF7FEFF 		bl	osDelay
+ 219              	.LVL18:
+ 212:Core/Src/freertos.c ****             if (BtnState == 1)
+ 220              		.loc 1 212 13 view .LVU45
+ 212:Core/Src/freertos.c ****             if (BtnState == 1)
+ 221              		.loc 1 212 24 is_stmt 0 view .LVU46
+ 222 0034 0121     		movs	r1, #1
+ 223 0036 0C48     		ldr	r0, .L19+8
+ 224 0038 FFF7FEFF 		bl	HAL_GPIO_ReadPin
+ 225              	.LVL19:
+ 212:Core/Src/freertos.c ****             if (BtnState == 1)
+ 226              		.loc 1 212 22 view .LVU47
+ 227 003c 0B4B     		ldr	r3, .L19+12
+ 228 003e 1870     		strb	r0, [r3]
+ 213:Core/Src/freertos.c ****             {
+ 229              		.loc 1 213 13 is_stmt 1 view .LVU48
+ 213:Core/Src/freertos.c ****             {
+ 230              		.loc 1 213 16 is_stmt 0 view .LVU49
+ 231 0040 0128     		cmp	r0, #1
+ 232 0042 E9D1     		bne	.L16
+ 215:Core/Src/freertos.c ****                 HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_RESET);
+ 233              		.loc 1 215 17 is_stmt 1 view .LVU50
+ 234 0044 074B     		ldr	r3, .L19+4
+ 235 0046 1868     		ldr	r0, [r3]
+ 236 0048 FFF7FEFF 		bl	osThreadSuspend
+ 237              	.LVL20:
+ 216:Core/Src/freertos.c ****                 LedTaskState = 1 ; 
+ 238              		.loc 1 216 17 view .LVU51
+ 239 004c 0022     		movs	r2, #0
+ 240 004e 4FF40051 		mov	r1, #8192
+ 241 0052 0348     		ldr	r0, .L19
+ 242 0054 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 243              	.LVL21:
+ 217:Core/Src/freertos.c ****             }
+ 244              		.loc 1 217 17 view .LVU52
+ 217:Core/Src/freertos.c ****             }
+ 245              		.loc 1 217 30 is_stmt 0 view .LVU53
+ 246 0058 054B     		ldr	r3, .L19+16
+ 247 005a 0122     		movs	r2, #1
+ 248 005c 1A70     		strb	r2, [r3]
+ 249 005e DBE7     		b	.L16
+ 250              	.L20:
+ 251              		.align	2
+ 252              	.L19:
+ 253 0060 000C0240 		.word	1073875968
+ 254 0064 00000000 		.word	.LANCHOR4
+ 255 0068 00000240 		.word	1073872896
+ 256 006c 00000000 		.word	.LANCHOR3
+ 257 0070 00000000 		.word	.LANCHOR0
+ 258              		.cfi_endproc
+ 259              	.LFE141:
+ARM GAS  /tmp/cckDjasy.s 			page 10
+
+
+ 261              		.section	.text.MX_FREERTOS_Init,"ax",%progbits
+ 262              		.align	1
+ 263              		.global	MX_FREERTOS_Init
+ 264              		.syntax unified
+ 265              		.thumb
+ 266              		.thumb_func
+ 268              	MX_FREERTOS_Init:
+ 269              	.LFB138:
+  89:Core/Src/freertos.c ****     /* USER CODE BEGIN Init */
+ 270              		.loc 1 89 1 is_stmt 1 view -0
+ 271              		.cfi_startproc
+ 272              		@ args = 0, pretend = 0, frame = 0
+ 273              		@ frame_needed = 0, uses_anonymous_args = 0
+ 274 0000 08B5     		push	{r3, lr}
+ 275              	.LCFI3:
+ 276              		.cfi_def_cfa_offset 8
+ 277              		.cfi_offset 3, -8
+ 278              		.cfi_offset 14, -4
+ 112:Core/Src/freertos.c ****         osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
+ 279              		.loc 1 112 5 view .LVU55
+ 113:Core/Src/freertos.c **** 
+ 280              		.loc 1 113 9 is_stmt 0 view .LVU56
+ 281 0002 0B4A     		ldr	r2, .L23
+ 282 0004 0021     		movs	r1, #0
+ 283 0006 0B48     		ldr	r0, .L23+4
+ 284 0008 FFF7FEFF 		bl	osThreadNew
+ 285              	.LVL22:
+ 112:Core/Src/freertos.c ****         osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
+ 286              		.loc 1 112 23 view .LVU57
+ 287 000c 0A4B     		ldr	r3, .L23+8
+ 288 000e 1860     		str	r0, [r3]
+ 116:Core/Src/freertos.c ****         osThreadNew(ClignoteTask_Cbk, NULL, &ClignoteTask_attributes);
+ 289              		.loc 1 116 5 is_stmt 1 view .LVU58
+ 117:Core/Src/freertos.c **** 
+ 290              		.loc 1 117 9 is_stmt 0 view .LVU59
+ 291 0010 0A4A     		ldr	r2, .L23+12
+ 292 0012 0021     		movs	r1, #0
+ 293 0014 0A48     		ldr	r0, .L23+16
+ 294 0016 FFF7FEFF 		bl	osThreadNew
+ 295              	.LVL23:
+ 116:Core/Src/freertos.c ****         osThreadNew(ClignoteTask_Cbk, NULL, &ClignoteTask_attributes);
+ 296              		.loc 1 116 24 view .LVU60
+ 297 001a 0A4B     		ldr	r3, .L23+20
+ 298 001c 1860     		str	r0, [r3]
+ 120:Core/Src/freertos.c ****         osThreadNew(ButtonTask_Cbk, NULL, &ButtonTask_attributes);
+ 299              		.loc 1 120 5 is_stmt 1 view .LVU61
+ 121:Core/Src/freertos.c **** 
+ 300              		.loc 1 121 9 is_stmt 0 view .LVU62
+ 301 001e 0A4A     		ldr	r2, .L23+24
+ 302 0020 0021     		movs	r1, #0
+ 303 0022 0A48     		ldr	r0, .L23+28
+ 304 0024 FFF7FEFF 		bl	osThreadNew
+ 305              	.LVL24:
+ 120:Core/Src/freertos.c ****         osThreadNew(ButtonTask_Cbk, NULL, &ButtonTask_attributes);
+ 306              		.loc 1 120 22 view .LVU63
+ 307 0028 094B     		ldr	r3, .L23+32
+ 308 002a 1860     		str	r0, [r3]
+ARM GAS  /tmp/cckDjasy.s 			page 11
+
+
+ 130:Core/Src/freertos.c **** 
+ 309              		.loc 1 130 1 view .LVU64
+ 310 002c 08BD     		pop	{r3, pc}
+ 311              	.L24:
+ 312 002e 00BF     		.align	2
+ 313              	.L23:
+ 314 0030 00000000 		.word	.LANCHOR5
+ 315 0034 00000000 		.word	StartDefaultTask
+ 316 0038 00000000 		.word	.LANCHOR6
+ 317 003c 00000000 		.word	.LANCHOR7
+ 318 0040 00000000 		.word	ClignoteTask_Cbk
+ 319 0044 00000000 		.word	.LANCHOR4
+ 320 0048 00000000 		.word	.LANCHOR8
+ 321 004c 00000000 		.word	ButtonTask_Cbk
+ 322 0050 00000000 		.word	.LANCHOR9
+ 323              		.cfi_endproc
+ 324              	.LFE138:
+ 326              		.global	BtnState
+ 327              		.global	xStartTime
+ 328              		.global	sum
+ 329              		.global	i
+ 330              		.global	LedTaskState
+ 331              		.global	ButtonTask_attributes
+ 332              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 333              		.align	2
+ 334              	.LC0:
+ 335 0000 42757474 		.ascii	"ButtonTask\000"
+ 335      6F6E5461 
+ 335      736B00
+ 336              		.global	ButtonTaskHandle
+ 337              		.global	ClignoteTask_attributes
+ 338 000b 00       		.align	2
+ 339              	.LC1:
+ 340 000c 436C6967 		.ascii	"ClignoteTask\000"
+ 340      6E6F7465 
+ 340      5461736B 
+ 340      00
+ 341              		.global	ClignoteTaskHandle
+ 342              		.global	defaultTask_attributes
+ 343 0019 000000   		.align	2
+ 344              	.LC2:
+ 345 001c 64656661 		.ascii	"defaultTask\000"
+ 345      756C7454 
+ 345      61736B00 
+ 346              		.global	defaultTaskHandle
+ 347              		.section	.bss.BtnState,"aw",%nobits
+ 348              		.set	.LANCHOR3,. + 0
+ 351              	BtnState:
+ 352 0000 00       		.space	1
+ 353              		.section	.bss.ButtonTaskHandle,"aw",%nobits
+ 354              		.align	2
+ 355              		.set	.LANCHOR9,. + 0
+ 358              	ButtonTaskHandle:
+ 359 0000 00000000 		.space	4
+ 360              		.section	.bss.ClignoteTaskHandle,"aw",%nobits
+ 361              		.align	2
+ 362              		.set	.LANCHOR4,. + 0
+ARM GAS  /tmp/cckDjasy.s 			page 12
+
+
+ 365              	ClignoteTaskHandle:
+ 366 0000 00000000 		.space	4
+ 367              		.section	.bss.LedTaskState,"aw",%nobits
+ 368              		.set	.LANCHOR0,. + 0
+ 371              	LedTaskState:
+ 372 0000 00       		.space	1
+ 373              		.section	.bss.defaultTaskHandle,"aw",%nobits
+ 374              		.align	2
+ 375              		.set	.LANCHOR6,. + 0
+ 378              	defaultTaskHandle:
+ 379 0000 00000000 		.space	4
+ 380              		.section	.bss.i,"aw",%nobits
+ 381              		.align	2
+ 384              	i:
+ 385 0000 00000000 		.space	4
+ 386              		.section	.bss.sum,"aw",%nobits
+ 387              		.align	2
+ 390              	sum:
+ 391 0000 00000000 		.space	4
+ 392              		.section	.bss.xLastWakeTime,"aw",%nobits
+ 393              		.align	2
+ 394              		.set	.LANCHOR2,. + 0
+ 397              	xLastWakeTime:
+ 398 0000 00000000 		.space	4
+ 399              		.section	.bss.xStartTime,"aw",%nobits
+ 400              		.align	2
+ 401              		.set	.LANCHOR1,. + 0
+ 404              	xStartTime:
+ 405 0000 00000000 		.space	4
+ 406              		.section	.rodata.ButtonTask_attributes,"a"
+ 407              		.align	2
+ 408              		.set	.LANCHOR8,. + 0
+ 411              	ButtonTask_attributes:
+ 412 0000 00000000 		.word	.LC0
+ 413 0004 00000000 		.space	16
+ 413      00000000 
+ 413      00000000 
+ 413      00000000 
+ 414 0014 00020000 		.word	512
+ 415 0018 0C000000 		.word	12
+ 416 001c 00000000 		.space	8
+ 416      00000000 
+ 417              		.section	.rodata.ClignoteTask_attributes,"a"
+ 418              		.align	2
+ 419              		.set	.LANCHOR7,. + 0
+ 422              	ClignoteTask_attributes:
+ 423 0000 0C000000 		.word	.LC1
+ 424 0004 00000000 		.space	16
+ 424      00000000 
+ 424      00000000 
+ 424      00000000 
+ 425 0014 00020000 		.word	512
+ 426 0018 09000000 		.word	9
+ 427 001c 00000000 		.space	8
+ 427      00000000 
+ 428              		.section	.rodata.defaultTask_attributes,"a"
+ 429              		.align	2
+ARM GAS  /tmp/cckDjasy.s 			page 13
+
+
+ 430              		.set	.LANCHOR5,. + 0
+ 433              	defaultTask_attributes:
+ 434 0000 1C000000 		.word	.LC2
+ 435 0004 00000000 		.space	16
+ 435      00000000 
+ 435      00000000 
+ 435      00000000 
+ 436 0014 00020000 		.word	512
+ 437 0018 18000000 		.word	24
+ 438 001c 00000000 		.space	8
+ 438      00000000 
+ 439              		.text
+ 440              	.Letext0:
+ 441              		.file 2 "/opt/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/machine/_default_types.h"
+ 442              		.file 3 "/opt/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/sys/_stdint.h"
+ 443              		.file 4 "Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h"
+ 444              		.file 5 "Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h"
+ 445              		.file 6 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h"
+ 446              		.file 7 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h"
+ 447              		.file 8 "Middlewares/Third_Party/FreeRTOS/Source/include/task.h"
+ARM GAS  /tmp/cckDjasy.s 			page 14
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 freertos.c
+     /tmp/cckDjasy.s:20     .text.StartDefaultTask:0000000000000000 $t
+     /tmp/cckDjasy.s:26     .text.StartDefaultTask:0000000000000000 StartDefaultTask
+     /tmp/cckDjasy.s:54     .text.ClignoteTask_Cbk:0000000000000000 $t
+     /tmp/cckDjasy.s:60     .text.ClignoteTask_Cbk:0000000000000000 ClignoteTask_Cbk
+     /tmp/cckDjasy.s:153    .text.ClignoteTask_Cbk:0000000000000060 $d
+     /tmp/cckDjasy.s:161    .text.ButtonTask_Cbk:0000000000000000 $t
+     /tmp/cckDjasy.s:167    .text.ButtonTask_Cbk:0000000000000000 ButtonTask_Cbk
+     /tmp/cckDjasy.s:253    .text.ButtonTask_Cbk:0000000000000060 $d
+     /tmp/cckDjasy.s:262    .text.MX_FREERTOS_Init:0000000000000000 $t
+     /tmp/cckDjasy.s:268    .text.MX_FREERTOS_Init:0000000000000000 MX_FREERTOS_Init
+     /tmp/cckDjasy.s:314    .text.MX_FREERTOS_Init:0000000000000030 $d
+     /tmp/cckDjasy.s:351    .bss.BtnState:0000000000000000 BtnState
+     /tmp/cckDjasy.s:404    .bss.xStartTime:0000000000000000 xStartTime
+     /tmp/cckDjasy.s:390    .bss.sum:0000000000000000 sum
+     /tmp/cckDjasy.s:384    .bss.i:0000000000000000 i
+     /tmp/cckDjasy.s:371    .bss.LedTaskState:0000000000000000 LedTaskState
+     /tmp/cckDjasy.s:411    .rodata.ButtonTask_attributes:0000000000000000 ButtonTask_attributes
+     /tmp/cckDjasy.s:333    .rodata.str1.4:0000000000000000 $d
+     /tmp/cckDjasy.s:358    .bss.ButtonTaskHandle:0000000000000000 ButtonTaskHandle
+     /tmp/cckDjasy.s:422    .rodata.ClignoteTask_attributes:0000000000000000 ClignoteTask_attributes
+     /tmp/cckDjasy.s:365    .bss.ClignoteTaskHandle:0000000000000000 ClignoteTaskHandle
+     /tmp/cckDjasy.s:433    .rodata.defaultTask_attributes:0000000000000000 defaultTask_attributes
+     /tmp/cckDjasy.s:378    .bss.defaultTaskHandle:0000000000000000 defaultTaskHandle
+     /tmp/cckDjasy.s:352    .bss.BtnState:0000000000000000 $d
+     /tmp/cckDjasy.s:354    .bss.ButtonTaskHandle:0000000000000000 $d
+     /tmp/cckDjasy.s:361    .bss.ClignoteTaskHandle:0000000000000000 $d
+     /tmp/cckDjasy.s:372    .bss.LedTaskState:0000000000000000 $d
+     /tmp/cckDjasy.s:374    .bss.defaultTaskHandle:0000000000000000 $d
+     /tmp/cckDjasy.s:381    .bss.i:0000000000000000 $d
+     /tmp/cckDjasy.s:387    .bss.sum:0000000000000000 $d
+     /tmp/cckDjasy.s:393    .bss.xLastWakeTime:0000000000000000 $d
+     /tmp/cckDjasy.s:397    .bss.xLastWakeTime:0000000000000000 xLastWakeTime
+     /tmp/cckDjasy.s:400    .bss.xStartTime:0000000000000000 $d
+     /tmp/cckDjasy.s:407    .rodata.ButtonTask_attributes:0000000000000000 $d
+     /tmp/cckDjasy.s:418    .rodata.ClignoteTask_attributes:0000000000000000 $d
+     /tmp/cckDjasy.s:429    .rodata.defaultTask_attributes:0000000000000000 $d
+
+UNDEFINED SYMBOLS
+osDelay
+HAL_GPIO_ReadPin
+HAL_GPIO_WritePin
+xTaskGetTickCount
+HAL_GPIO_TogglePin
+osThreadResume
+osThreadSuspend
+osThreadNew
